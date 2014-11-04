@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
     warn 'Warning: No private key present, creating unsigned gem.'
   end
 
-  s.files             = ['bson_ext.gemspec', 'LICENSE', 'VERSION']
+  s.files             = ['run_bson_ext.gemspec', 'LICENSE', 'VERSION']
   s.files             += Dir['ext/**/*.rb'] + Dir['ext/**/*.c'] + Dir['ext/**/*.h']
 
   s.require_paths     = ['ext/bson_ext']
