@@ -27,5 +27,5 @@ Gem::Specification.new do |s|
   s.require_paths     = ['lib']
   s.has_rdoc          = 'yard'
 
-  s.add_dependency('bson', "#{s.version}")
+  s.add_dependency('run_bson', "#{s.version}")
 end

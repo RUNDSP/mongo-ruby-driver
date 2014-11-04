@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name              = 'bson'
+  s.name              = 'run_bson'
 
   s.version           = File.read(File.join(File.dirname(__FILE__), 'VERSION'))
   s.authors           = ['Emily Stolfo', 'Durran Jordan', 'Gary Murakami', 'Tyler Brock', 'Brandon Black']
@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://www.mongodb.org'
   s.summary           = 'Ruby implementation of BSON'
   s.description       = 'A Ruby BSON implementation for MongoDB. For more information about Mongo, see http://www.mongodb.org. For more information on BSON, see http://www.bsonspec.org.'
-  s.rubyforge_project = 'bson'
+  s.rubyforge_project = 'run_bson'
   s.license           = 'Apache License Version 2.0'
 
   if File.exists?('gem-private_key.pem')
