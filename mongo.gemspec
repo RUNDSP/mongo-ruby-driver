@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
   s.has_rdoc          = 'yard'
 
   s.add_dependency('run_bson', "#{s.version}")
+  s.add_dependency('run_bson_ext', "#{s.version}")
 end

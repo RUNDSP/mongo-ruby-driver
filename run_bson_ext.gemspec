@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name              = 'bson_ext'
+  s.name              = 'run_bson_ext'
 
   s.version           = File.read(File.join(File.dirname(__FILE__), 'VERSION'))
   s.platform          = Gem::Platform::RUBY
@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://www.mongodb.org'
   s.summary           = 'C extensions for Ruby BSON.'
   s.description       = 'C extensions to accelerate the Ruby BSON serialization. For more information about BSON, see http://bsonspec.org.  For information about MongoDB, see http://www.mongodb.org.'
-  s.rubyforge_project = 'bson_ext'
+  s.rubyforge_project = 'run_bson_ext'
   s.license           = 'Apache License Version 2.0'
 
   if File.exists?('gem-private_key.pem')
@@ -25,5 +25,5 @@ Gem::Specification.new do |s|
   s.extensions        = ['ext/cbson/extconf.rb']
   s.has_rdoc          = 'yard'
 
-  s.add_dependency('bson', "~> #{s.version}")
+  s.add_dependency('run_bson', "~> #{s.version}")
 end
