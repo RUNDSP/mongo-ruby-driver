@@ -70,7 +70,7 @@ class ReplicaSetInsertTest < Test::Unit::TestCase
     should "handle error with deferred write concern error - spec Merging Results" do
       with_write_commands_and_operations(@db.connection) do |wire_version|
         @coll.remove
-        @coll.ensure_index(BSON::OrderedHash[:a, Mongo::ASCENDING], {:unique => true})
+        @coll.ensure_index(RUN_BSON::OrderedHash[:a, Mongo::ASCENDING], {:unique => true})
         bulk = @coll.initialize_ordered_bulk_op
         bulk.insert({:a => 1})
         bulk.find({:a => 2}).upsert.update({'$set' => {:a => 2}})
@@ -115,7 +115,7 @@ class ReplicaSetInsertTest < Test::Unit::TestCase
     should "handle unordered errors with deferred write concern error - spec Merging Results" do # TODO - spec review
       with_write_commands_and_operations(@db.connection) do |wire_version|
         @coll.remove
-        @coll.ensure_index(BSON::OrderedHash[:a, Mongo::ASCENDING], {:unique => true})
+        @coll.ensure_index(RUN_BSON::OrderedHash[:a, Mongo::ASCENDING], {:unique => true})
         bulk = @coll.initialize_unordered_bulk_op
         bulk.insert({:a => 1})
         bulk.find({:a => 2}).upsert.update({'$set' => {:a => 1}})

@@ -353,7 +353,7 @@ class ReplicaSetClientTest < Test::Unit::TestCase
   def test_find_and_modify_with_secondary_read_preference
     @client = MongoReplicaSetClient.from_uri(@uri)
     collection = @client[TEST_DB].collection('test', :read => :secondary)
-    id = BSON::ObjectId.new
+    id = RUN_BSON::ObjectId.new
     collection << { :a => id, :processed => false }
 
     collection.find_and_modify(

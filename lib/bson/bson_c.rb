@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # A thin wrapper for the BSON C-Extension
-module BSON
+module RUN_BSON
   class BSON_C
 
     def self.serialize(obj, check_keys=false, move_id=false, max_bson_size=DEFAULT_MAX_BSON_SIZE)
@@ -25,12 +25,12 @@ module BSON
     end
 
     def self.max_bson_size
-      warn "BSON::BSON_CODER.max_bson_size is deprecated and will be removed in v2.0."
+      warn "RUN_BSON::BSON_CODER.max_bson_size is deprecated and will be removed in v2.0."
       CBson.max_bson_size
     end
 
     def self.update_max_bson_size(connection)
-      warn "BSON::BSON_CODER.update_max_bson_size is deprecated and now a no-op. It will be removed in v2.0."
+      warn "RUN_BSON::BSON_CODER.update_max_bson_size is deprecated and now a no-op. It will be removed in v2.0."
       CBson.update_max_bson_size(connection)
     end
   end

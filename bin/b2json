@@ -31,7 +31,7 @@ end
 # Convert all documents in an IO into JSON.
 def print_b2json(io)
   while not io.eof? do
-    bsonobj = BSON.read_bson_document(io)
+    bsonobj = RUN_BSON.read_bson_document(io)
     Yajl::Encoder.encode(bsonobj, STDOUT)
     STDOUT << "\n"
   end

@@ -246,9 +246,9 @@ module Mongo
 
     # Flush all pending writes to datafiles.
     #
-    # @return [BSON::OrderedHash] the command response
+    # @return [RUN_BSON::OrderedHash] the command response
     def lock!
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:fsync] = 1
       cmd[:lock]  = true
       self['admin'].command(cmd)
@@ -263,7 +263,7 @@ module Mongo
 
     # Unlock a previously fsync-locked mongod process.
     #
-    # @return [BSON::OrderedHash] command response
+    # @return [RUN_BSON::OrderedHash] command response
     def unlock!
       self['admin']['$cmd.sys.unlock'].find_one
     end
@@ -335,7 +335,7 @@ module Mongo
     #
     # @note This command only supports the MONGODB-CR authentication mechanism.
     def copy_database(from, to, from_host=DEFAULT_HOST, username=nil, password=nil)
-      oh = BSON::OrderedHash.new
+      oh = RUN_BSON::OrderedHash.new
       oh[:copydb]   = 1
       oh[:fromhost] = from_host
       oh[:fromdb]   = from
@@ -345,7 +345,7 @@ module Mongo
           raise MongoArgumentError,
             'Both username and password must be supplied for authentication.'
         end
-        nonce_cmd = BSON::OrderedHash.new
+        nonce_cmd = RUN_BSON::OrderedHash.new
         nonce_cmd[:copydbgetnonce] = 1
         nonce_cmd[:fromhost] = from_host
         result = self['admin'].command(nonce_cmd)

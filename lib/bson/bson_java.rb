@@ -20,7 +20,7 @@ jar_dir = File.expand_path(File.join(File.dirname(__FILE__), '../../ext/jbson'))
 require File.join(jar_dir, 'lib/java-bson.jar')
 require File.join(jar_dir, 'target/jbson.jar')
 
-module BSON
+module RUN_BSON
   class BSON_JAVA
     def self.serialize(obj, check_keys=false, move_id=false, max_bson_size=DEFAULT_MAX_BSON_SIZE)
       raise InvalidDocument, "BSON_JAVA.serialize takes a Hash" unless obj.is_a?(Hash)
@@ -37,12 +37,12 @@ module BSON
     end
 
     def self.max_bson_size
-      warn "BSON::BSON_CODER.max_bson_size is deprecated and will be removed in v2.0."
+      warn "RUN_BSON::BSON_CODER.max_bson_size is deprecated and will be removed in v2.0."
       Java::OrgJbson::RubyBSONEncoder.max_bson_size(self)
     end
 
     def self.update_max_bson_size(connection)
-      warn "BSON::BSON_CODER.update_max_bson_size is deprecated and now a no-op. It will be removed in v2.0."
+      warn "RUN_BSON::BSON_CODER.update_max_bson_size is deprecated and now a no-op. It will be removed in v2.0."
       Java::OrgJbson::RubyBSONEncoder.update_max_bson_size(self, connection)
     end
   end

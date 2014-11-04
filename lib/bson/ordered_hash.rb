@@ -17,13 +17,13 @@
 # Under Ruby 1.9 and greater, this class has no added methods because Ruby's
 # Hash already keeps its keys ordered by order of insertion.
 
-module BSON
+module RUN_BSON
   class OrderedHash < Hash
 
     def ==(other)
       begin
         case other
-        when BSON::OrderedHash
+        when RUN_BSON::OrderedHash
            keys == other.keys && values == other.values
         else
           super
@@ -34,11 +34,11 @@ module BSON
     end
 
     # Allows activesupport Array#extract_options! to extract options
-    # when they are instance of BSON::OrderedHash
+    # when they are instance of RUN_BSON::OrderedHash
     #
     # @return [true, false] true if options can be extracted
     def extractable_options?
-      instance_of?(BSON::OrderedHash)
+      instance_of?(RUN_BSON::OrderedHash)
     end
 
     def reject
@@ -56,7 +56,7 @@ module BSON
       attr_accessor :ordered_keys
 
       def self.[] *args
-        oh = BSON::OrderedHash.new
+        oh = RUN_BSON::OrderedHash.new
         if Hash === args[0]
           oh.merge! args[0]
         elsif (args.size % 2) != 0
@@ -117,7 +117,7 @@ module BSON
       end
 
       def merge!(other)
-        @ordered_keys += other.keys # unordered if not an BSON::OrderedHash
+        @ordered_keys += other.keys # unordered if not an RUN_BSON::OrderedHash
         @ordered_keys.uniq!
         super(other)
       end
@@ -133,7 +133,7 @@ module BSON
       end
 
       def inspect
-        str = "#<BSON::OrderedHash:0x#{self.object_id.to_s(16)} {"
+        str = "#<RUN_BSON::OrderedHash:0x#{self.object_id.to_s(16)} {"
         str << (@ordered_keys || []).collect { |k| "\"#{k}\"=>#{self.[](k).inspect}" }.join(", ")
         str << '}>'
       end
@@ -154,7 +154,7 @@ module BSON
 
       def reject!
         return to_enum(:reject!) unless block_given?
-        raise "can't modify frozen BSON::OrderedHash" if frozen?
+        raise "can't modify frozen RUN_BSON::OrderedHash" if frozen?
         keys = @ordered_keys.dup
         @ordered_keys.each do |k|
           if yield k, self[k]
@@ -185,7 +185,7 @@ module BSON
         end
 
         def eql?(o)
-          if o.instance_of? BSON::OrderedHash
+          if o.instance_of? RUN_BSON::OrderedHash
             self.hash == o.hash
           else
             false

@@ -26,10 +26,10 @@ require 'test_helper'
 require 'bson/support/hash_with_indifferent_access'
 
 class HashWithIndifferentAccessTest < Test::Unit::TestCase
-  include BSON
+  include RUN_BSON
 
   def setup
-    @encoder = BSON::BSON_CODER
+    @encoder = RUN_BSON::BSON_CODER
   end
 
   def test_document
@@ -50,7 +50,7 @@ class HashWithIndifferentAccessTest < Test::Unit::TestCase
     stats['eyes'] = 'blue'
 
     person = HashWithIndifferentAccess.new
-    person['_id'] = BSON::ObjectId.new
+    person['_id'] = RUN_BSON::ObjectId.new
     person['name'] = 'Mr. Pet Lover'
     person['pets'] = [jimmy, {'name' => 'Sasha'}]
     person['stats'] = stats

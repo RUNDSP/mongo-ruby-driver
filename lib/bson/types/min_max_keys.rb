@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module BSON
+module RUN_BSON
 
   # A class representing the BSON MaxKey type. MaxKey will always compare greater than
   # all other BSON types and values.

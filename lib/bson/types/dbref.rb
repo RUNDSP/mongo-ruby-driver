@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module BSON
+module RUN_BSON
 
   # A reference to another object in a MongoDB database.
   class DBRef

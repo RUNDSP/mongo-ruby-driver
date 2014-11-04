@@ -50,14 +50,14 @@ public class RubyBSONCallback implements BSONCallback {
 
     public RubyBSONCallback(Ruby runtime) {
       _runtime          = runtime;
-      _rbclsOrderedHash = runtime.getClassFromPath( "BSON::OrderedHash" );
-      _rbclsBinary      = runtime.getClassFromPath( "BSON::Binary" );
-      _rbclsCode        = runtime.getClassFromPath( "BSON::Code" );
-      _rbclsMinKey      = runtime.getClassFromPath( "BSON::MinKey" );
-      _rbclsMaxKey      = runtime.getClassFromPath( "BSON::MaxKey" );
-      _rbclsTimestamp   = runtime.getClassFromPath( "BSON::Timestamp" );
-      _rbclsObjectId    = runtime.getClassFromPath( "BSON::ObjectId" );
-      _rbclsBSONRegex   = runtime.getClassFromPath( "BSON::Regex" );
+      _rbclsOrderedHash = runtime.getClassFromPath( "RUN_BSON::OrderedHash" );
+      _rbclsBinary      = runtime.getClassFromPath( "RUN_BSON::Binary" );
+      _rbclsCode        = runtime.getClassFromPath( "RUN_BSON::Code" );
+      _rbclsMinKey      = runtime.getClassFromPath( "RUN_BSON::MinKey" );
+      _rbclsMaxKey      = runtime.getClassFromPath( "RUN_BSON::MaxKey" );
+      _rbclsTimestamp   = runtime.getClassFromPath( "RUN_BSON::Timestamp" );
+      _rbclsObjectId    = runtime.getClassFromPath( "RUN_BSON::ObjectId" );
+      _rbclsBSONRegex   = runtime.getClassFromPath( "RUN_BSON::Regex" );
     }
 
     public BSONCallback createBSONCallback(){

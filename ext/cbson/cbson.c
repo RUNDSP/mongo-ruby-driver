@@ -444,7 +444,7 @@ static int write_element(VALUE key, VALUE value, VALUE extra, int allow_id) {
         {
             // TODO there has to be a better way to do these checks...
             const char* cls = rb_obj_classname(value);
-            if (strcmp(cls, "BSON::Binary") == 0 ||
+            if (strcmp(cls, "RUN_BSON::Binary") == 0 ||
                 strcmp(cls, "ByteBuffer") == 0) {
                 VALUE string_data = rb_funcall(value, rb_intern("to_s"), 0);
                 int length = RSTRING_LENINT(string_data);
@@ -463,7 +463,7 @@ static int write_element(VALUE key, VALUE value, VALUE extra, int allow_id) {
                 SAFE_WRITE(buffer, RSTRING_PTR(string_data), length);
                 break;
             }
-            if (strcmp(cls, "BSON::ObjectId") == 0) {
+            if (strcmp(cls, "RUN_BSON::ObjectId") == 0) {
                 int i;
                 VALUE as_array = rb_funcall(value, rb_intern("to_a"), 0);
                 write_name_and_type(buffer, key, 0x07);
@@ -473,7 +473,7 @@ static int write_element(VALUE key, VALUE value, VALUE extra, int allow_id) {
                 }
                 break;
             }
-            if (strcmp(cls, "BSON::DBRef") == 0) {
+            if (strcmp(cls, "RUN_BSON::DBRef") == 0) {
                 bson_buffer_position length_location, start_position, obj_length;
                 VALUE ns, oid;
                 write_name_and_type(buffer, key, 0x03);
@@ -497,7 +497,7 @@ static int write_element(VALUE key, VALUE value, VALUE extra, int allow_id) {
                 SAFE_WRITE_AT_POS(buffer, length_location, (const char*)&obj_length, 4);
                 break;
             }
-            if (strcmp(cls, "BSON::Code") == 0) {
+            if (strcmp(cls, "RUN_BSON::Code") == 0) {
                 bson_buffer_position length_location, start_position, total_length;
                 int length;
                 VALUE code_str;
@@ -520,15 +520,15 @@ static int write_element(VALUE key, VALUE value, VALUE extra, int allow_id) {
                 SAFE_WRITE_AT_POS(buffer, length_location, (const char*)&total_length, 4);
                 break;
             }
-            if (strcmp(cls, "BSON::MaxKey") == 0) {
+            if (strcmp(cls, "RUN_BSON::MaxKey") == 0) {
                 write_name_and_type(buffer, key, 0x7f);
                 break;
             }
-            if (strcmp(cls, "BSON::MinKey") == 0) {
+            if (strcmp(cls, "RUN_BSON::MinKey") == 0) {
                 write_name_and_type(buffer, key, 0xff);
                 break;
             }
-            if (strcmp(cls, "BSON::Timestamp") == 0) {
+            if (strcmp(cls, "RUN_BSON::Timestamp") == 0) {
                 unsigned int seconds;
                 unsigned int increment;
 
@@ -563,7 +563,7 @@ static int write_element(VALUE key, VALUE value, VALUE extra, int allow_id) {
                 SAFE_WRITE(buffer, &zero, 1);
                 break;
             }
-            if (strcmp(cls, "BSON::Regex") == 0) {
+            if (strcmp(cls, "RUN_BSON::Regex") == 0) {
                 serialize_regex(buffer, key, rb_funcall(value, rb_intern("pattern"), 0),
                     FIX2INT(rb_funcall(value, rb_intern("options"), 0)), value, 0);
                 break;
@@ -668,7 +668,7 @@ static void write_doc(bson_buffer_t buffer, VALUE hash, VALUE check_keys, VALUE 
     }
 
     // we have to check for an OrderedHash and handle that specially
-    if (strcmp(rb_obj_classname(hash), "BSON::OrderedHash") == 0) {
+    if (strcmp(rb_obj_classname(hash), "RUN_BSON::OrderedHash") == 0) {
         int i;
         VALUE keys = rb_funcall(hash, rb_intern("keys"), 0);
 

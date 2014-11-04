@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module BSON
+module RUN_BSON
 
   # A class for representing BSON Timestamps. The Timestamp type is used
   # by MongoDB internally; thus, it should be used by application developers
@@ -47,7 +47,7 @@ module BSON
     # @deprecated
     def [](index)
       warn "Timestamps are no longer deserialized as arrays. If you're working " +
-        "with BSON Timestamp objects, see the BSON::Timestamp class. This usage will " +
+        "with BSON Timestamp objects, see the RUN_BSON::Timestamp class. This usage will " +
         "be deprecated in Ruby Driver v2.0."
       if index == 0
         self.increment

@@ -55,8 +55,8 @@ module Mongo
     #     Collection instance. If no value is provided, the default values set on this instance's DB will be used.
     #     These option values can be overridden for any invocation of insert, update, or remove.
     #
-    # @option opts [:create_pk] :pk (BSON::ObjectId) A primary key factory to use
-    #   other than the default BSON::ObjectId.
+    # @option opts [:create_pk] :pk (RUN_BSON::ObjectId) A primary key factory to use
+    #   other than the default RUN_BSON::ObjectId.
     # @option opts [:primary, :secondary] :read The default read preference for queries
     #   initiates from this connection object. If +:secondary+ is chosen, reads will be sent
     #   to one of the closest available secondary nodes. If a secondary node cannot be located, the
@@ -113,7 +113,7 @@ module Mongo
         @tag_sets           = opts.fetch(:tag_sets, @db.tag_sets)
         @acceptable_latency = opts.fetch(:acceptable_latency, @db.acceptable_latency)
       end
-      @pk_factory = pk_factory || opts[:pk] || BSON::ObjectId
+      @pk_factory = pk_factory || opts[:pk] || RUN_BSON::ObjectId
       @hint = nil
       @operation_writer = CollectionOperationWriter.new(self)
       @command_writer = CollectionCommandWriter.new(self)
@@ -184,7 +184,7 @@ module Mongo
     #   a document specifying elements which must be present for a
     #   document to be included in the result set. Note that in rare cases,
     #   (e.g., with $near queries), the order of keys will matter. To preserve
-    #   key order on a selector, use an instance of BSON::OrderedHash (only applies
+    #   key order on a selector, use an instance of RUN_BSON::OrderedHash (only applies
     #   to Ruby 1.8).
     #
     # @option opts [Array, Hash] :fields field names that should be returned in the result
@@ -224,7 +224,7 @@ module Mongo
     #   This is normally used by object mappers to convert each returned document to an instance of a class.
     # @option opts [String] :comment (nil) a comment to include in profiling logs
     # @option opts [Boolean] :compile_regex (true) whether BSON regex objects should be compiled into Ruby regexes.
-    #   If false, a BSON::Regex object will be returned instead.
+    #   If false, a RUN_BSON::Regex object will be returned instead.
     #
     # @raise [ArgumentError]
     #   if timeout is set to false and find is not invoked in a block
@@ -317,7 +317,7 @@ module Mongo
       spec = case spec_or_object_id
              when nil
                {}
-             when BSON::ObjectId
+             when RUN_BSON::ObjectId
                {:_id => spec_or_object_id}
              when Hash
                spec_or_object_id
@@ -651,7 +651,7 @@ module Mongo
     def find_and_modify(opts={})
       full_response = opts.delete(:full_response)
 
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:findandmodify] = @name
       cmd.merge!(opts)
 
@@ -706,7 +706,7 @@ module Mongo
       raise MongoArgumentError, "pipeline must be an array of operators" unless pipeline.class == Array
       raise MongoArgumentError, "pipeline operators must be hashes" unless pipeline.all? { |op| op.class == Hash }
 
-      selector = BSON::OrderedHash.new
+      selector = RUN_BSON::OrderedHash.new
       selector['aggregate'] = self.name
       selector['pipeline'] = pipeline
 
@@ -737,15 +737,15 @@ module Mongo
 
     # Perform a map-reduce operation on the current collection.
     #
-    # @param [String, BSON::Code] map a map function, written in JavaScript.
-    # @param [String, BSON::Code] reduce a reduce function, written in JavaScript.
+    # @param [String, RUN_BSON::Code] map a map function, written in JavaScript.
+    # @param [String, RUN_BSON::Code] reduce a reduce function, written in JavaScript.
     #
     # @option opts [Hash] :query ({}) a query selector document, like what's passed to #find, to limit
     #   the operation to a subset of the collection.
     # @option opts [Array] :sort ([]) an array of [key, direction] pairs to sort by. Direction should
     #   be specified as Mongo::ASCENDING (or :ascending / :asc) or Mongo::DESCENDING (or :descending / :desc)
     # @option opts [Integer] :limit (nil) if passing a query, number of objects to return from the collection.
-    # @option opts [String, BSON::Code] :finalize (nil) a javascript function to apply to the result set after the
+    # @option opts [String, RUN_BSON::Code] :finalize (nil) a javascript function to apply to the result set after the
     #   map/reduce operation has finished.
     # @option opts [String, Hash] :out Location of the result of the map-reduce operation. You can output to a
     #   collection, output to a collection with an action, or output inline. You may output to a collection
@@ -769,11 +769,11 @@ module Mongo
     # @see http://www.mongodb.org/display/DOCS/MapReduce Offical MongoDB map/reduce documentation.
     def map_reduce(map, reduce, opts={})
       opts = opts.dup
-      map    = BSON::Code.new(map) unless map.is_a?(BSON::Code)
-      reduce = BSON::Code.new(reduce) unless reduce.is_a?(BSON::Code)
+      map    = RUN_BSON::Code.new(map) unless map.is_a?(RUN_BSON::Code)
+      reduce = RUN_BSON::Code.new(reduce) unless reduce.is_a?(RUN_BSON::Code)
       raw    = opts.delete(:raw)
 
-      hash = BSON::OrderedHash.new
+      hash = RUN_BSON::OrderedHash.new
       hash['mapreduce'] = self.name
       hash['map'] = map
       hash['reduce'] = reduce
@@ -788,7 +788,7 @@ module Mongo
       if raw
         result
       elsif result['result']
-        if result['result'].is_a?(BSON::OrderedHash) &&
+        if result['result'].is_a?(RUN_BSON::OrderedHash) &&
             result['result'].key?('db') &&
             result['result'].key?('collection')
           otherdb = @db.connection[result['result']['db']]
@@ -809,12 +809,12 @@ module Mongo
     #   and :reduce.
     #
     # @option opts [Array, String, Symbol] :key (nil) Either the name of a field or a list of fields to group by (optional).
-    # @option opts [String, BSON::Code] :keyf (nil) A JavaScript function to be used to generate the grouping keys (optional).
-    # @option opts [String, BSON::Code] :cond ({}) A document specifying a query for filtering the documents over
+    # @option opts [String, RUN_BSON::Code] :keyf (nil) A JavaScript function to be used to generate the grouping keys (optional).
+    # @option opts [String, RUN_BSON::Code] :cond ({}) A document specifying a query for filtering the documents over
     #   which the aggregation is run (optional).
     # @option opts [Hash] :initial the initial value of the aggregation counter object (required).
-    # @option opts [String, BSON::Code] :reduce (nil) a JavaScript aggregation function (required).
-    # @option opts [String, BSON::Code] :finalize (nil) a JavaScript function that receives and modifies
+    # @option opts [String, RUN_BSON::Code] :reduce (nil) a JavaScript aggregation function (required).
+    # @option opts [String, RUN_BSON::Code] :finalize (nil) a JavaScript function that receives and modifies
     #   each of the resultant grouped objects. Available only when group is run with command
     #   set to true.
     # @option opts [:primary, :secondary] :read Read preference indicating which server to perform this group
@@ -828,13 +828,13 @@ module Mongo
         return new_group(opts)
       elsif opts.is_a?(Symbol)
         raise MongoArgumentError, "Group takes either an array of fields to group by or a JavaScript function" +
-          "in the form of a String or BSON::Code."
+          "in the form of a String or RUN_BSON::Code."
       end
 
       warn "Collection#group no longer takes a list of parameters. This usage is deprecated and will be removed in v2.0." +
              "Check out the new API at http://api.mongodb.org/ruby/current/Mongo/Collection.html#group-instance_method"
 
-      reduce = BSON::Code.new(reduce) unless reduce.is_a?(BSON::Code)
+      reduce = RUN_BSON::Code.new(reduce) unless reduce.is_a?(RUN_BSON::Code)
 
       group_command = {
         "group" => {
@@ -852,14 +852,14 @@ module Mongo
           opts.each { |k| key_value[k] = 1 }
         else
           key_type  = "$keyf"
-          key_value = opts.is_a?(BSON::Code) ? opts : BSON::Code.new(opts)
+          key_value = opts.is_a?(RUN_BSON::Code) ? opts : RUN_BSON::Code.new(opts)
         end
 
         group_command["group"][key_type] = key_value
       end
 
-      finalize = BSON::Code.new(finalize) if finalize.is_a?(String)
-      if finalize.is_a?(BSON::Code)
+      finalize = RUN_BSON::Code.new(finalize) if finalize.is_a?(String)
+      if finalize.is_a?(RUN_BSON::Code)
         group_command['group']['finalize'] = finalize
       end
 
@@ -883,7 +883,7 @@ module Mongo
     #
     # @return [Array] An array of up to num_cursors cursors for iterating over the collection.
     def parallel_scan(num_cursors, opts={})
-      cmd                          = BSON::OrderedHash.new
+      cmd                          = RUN_BSON::OrderedHash.new
       cmd[:parallelCollectionScan] = self.name
       cmd[:numCursors]             = num_cursors
       result                       = @db.command(cmd, command_options(opts))
@@ -976,7 +976,7 @@ module Mongo
     # @return [Array] an array of distinct values.
     def distinct(key, query=nil, opts={})
       raise MongoArgumentError unless [String, Symbol].include?(key.class)
-      command            = BSON::OrderedHash.new
+      command            = RUN_BSON::OrderedHash.new
       command[:distinct] = @name
       command[:key]      = key.to_s
       command[:query]    = query
@@ -1082,7 +1082,7 @@ module Mongo
       when nil
         nil
       else
-        h = BSON::OrderedHash.new
+        h = RUN_BSON::OrderedHash.new
         hint.to_a.each { |k| h[k] = 1 }
         h
       end
@@ -1108,15 +1108,15 @@ module Mongo
     end
 
     def parse_index_spec(spec)
-      field_spec = BSON::OrderedHash.new
+      field_spec = RUN_BSON::OrderedHash.new
       if spec.is_a?(String) || spec.is_a?(Symbol)
         field_spec[spec.to_s] = 1
       elsif spec.is_a?(Hash)
-        if RUBY_VERSION < '1.9' && !spec.is_a?(BSON::OrderedHash)
+        if RUBY_VERSION < '1.9' && !spec.is_a?(RUN_BSON::OrderedHash)
           raise MongoArgumentError, "Must use OrderedHash in Ruby < 1.9.0"
         end
         validate_index_types(spec.values)
-        field_spec = spec.is_a?(BSON::OrderedHash) ? spec : BSON::OrderedHash.try_convert(spec)
+        field_spec = spec.is_a?(RUN_BSON::OrderedHash) ? spec : RUN_BSON::OrderedHash.try_convert(spec)
       elsif spec.is_a?(Array) && spec.all? {|field| field.is_a?(Array) }
         spec.each do |f|
           validate_index_types(f[1])
@@ -1147,7 +1147,7 @@ module Mongo
       selector.merge!(opts)
 
       begin
-        cmd = BSON::OrderedHash[:createIndexes, @name, :indexes, [selector]]
+        cmd = RUN_BSON::OrderedHash[:createIndexes, @name, :indexes, [selector]]
         @db.command(cmd)
       rescue Mongo::OperationFailure => ex
         if Mongo::ErrorCode::COMMAND_NOT_FOUND_CODES.include?(ex.error_code)

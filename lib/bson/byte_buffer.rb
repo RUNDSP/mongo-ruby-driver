@@ -14,9 +14,9 @@
 
 require 'bson/grow'
 
-module BSON
+module RUN_BSON
   class ByteBuffer
-    include BSON::Grow
+    include RUN_BSON::Grow
 
     attr_reader :order, :max_size
 
@@ -32,7 +32,7 @@ module BSON
           else
             initial_data
           end
-        when BSON::ByteBuffer then
+        when RUN_BSON::ByteBuffer then
           initial_data.to_a.pack('C*')
         else
           initial_data.pack('C*')

@@ -24,7 +24,7 @@ module Mongo
     # Send a message to MongoDB, adding the necessary headers.
     #
     # @param [Integer] operation a MongoDB opcode.
-    # @param [BSON::ByteBuffer] message a message to send to the database.
+    # @param [RUN_BSON::ByteBuffer] message a message to send to the database.
     #
     # @option opts [Symbol] :connection (:writer) The connection to which
     #   this message should be sent. Valid options are :writer and :reader.
@@ -65,7 +65,7 @@ module Mongo
     # an exception if the operation has failed.
     #
     # @param [Integer] operation a MongoDB opcode.
-    # @param [BSON::ByteBuffer] message a message to send to the database.
+    # @param [RUN_BSON::ByteBuffer] message a message to send to the database.
     # @param [String] db_name the name of the database. used on call to get_last_error.
     # @param [String] log_message this is currently a no-op and will be removed.
     # @param [Hash] write_concern write concern.
@@ -117,7 +117,7 @@ module Mongo
     # Sends a message to the database and waits for the response.
     #
     # @param [Integer] operation a MongoDB opcode.
-    # @param [BSON::ByteBuffer] message a message to send to the database.
+    # @param [RUN_BSON::ByteBuffer] message a message to send to the database.
     # @param [String] log_message this is currently a no-op and will be removed.
     # @param [Socket] socket a socket to use in lieu of checking out a new one.
     # @param [Boolean] command (false) indicate whether this is a command. If this is a command,
@@ -233,26 +233,26 @@ module Mongo
         size = buf.unpack('V')[0]
         buf << receive_message_on_socket(size - 4, sock)
         number_remaining -= 1
-        docs << BSON::BSON_CODER.deserialize(buf, opts)
+        docs << RUN_BSON::BSON_CODER.deserialize(buf, opts)
       end
       [docs, number_received]
     end
 
     def build_command_message(db_name, query, projection=nil, skip=0, limit=-1)
-      message = BSON::ByteBuffer.new("", max_message_size)
+      message = RUN_BSON::ByteBuffer.new("", max_message_size)
       message.put_int(0)
-      BSON::BSON_RUBY.serialize_cstr(message, "#{db_name}.$cmd")
+      RUN_BSON::BSON_RUBY.serialize_cstr(message, "#{db_name}.$cmd")
       message.put_int(skip)
       message.put_int(limit)
-      message.put_binary(BSON::BSON_CODER.serialize(query, false, false, max_bson_size).to_s)
-      message.put_binary(BSON::BSON_CODER.serialize(projection, false, false, max_bson_size).to_s) if projection
+      message.put_binary(RUN_BSON::BSON_CODER.serialize(query, false, false, max_bson_size).to_s)
+      message.put_binary(RUN_BSON::BSON_CODER.serialize(projection, false, false, max_bson_size).to_s) if projection
       message
     end
 
     # Constructs a getlasterror message. This method is used exclusively by
     # MongoClient#send_message_with_gle.
     def build_get_last_error_message(db_name, write_concern)
-      gle = BSON::OrderedHash.new
+      gle = RUN_BSON::OrderedHash.new
       gle[:getlasterror] = 1
       if write_concern.is_a?(Hash)
         write_concern.assert_valid_keys(:w, :wtimeout, :fsync, :j)

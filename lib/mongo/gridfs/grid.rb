@@ -61,7 +61,7 @@ module Mongo
     #      When :w > 0, the chunks sent to the server are validated using an md5 hash.
     #      If validation fails, an exception will be raised.
     #
-    # @return [BSON::ObjectId] the file's id.
+    # @return [RUN_BSON::ObjectId] the file's id.
     def put(data, opts={})
       begin
         # Ensure there is an index on files_id and n, as state may have changed since instantiation of self.

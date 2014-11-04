@@ -19,7 +19,7 @@ require 'logger'
 
 class TestPKFactory
   def create_pk(row)
-    row['_id'] ||= BSON::ObjectId.new
+    row['_id'] ||= RUN_BSON::ObjectId.new
     row
   end
 end
@@ -120,7 +120,7 @@ class DBTest < Test::Unit::TestCase
     assert_not_nil oid
     assert_equal insert_id, oid
 
-    oid = BSON::ObjectId.new
+    oid = RUN_BSON::ObjectId.new
     data = {'_id' => oid, 'name' => 'Barney', 'age' => 41}
     coll.insert(data)
     row = coll.find_one({'name' => data['name']})
@@ -219,7 +219,7 @@ class DBTest < Test::Unit::TestCase
 
   def test_command_with_bson
     normal_response = @db.command({:buildInfo => 1})
-    bson = BSON::BSON_CODER.serialize({:buildInfo => 1}, false, false)
+    bson = RUN_BSON::BSON_CODER.serialize({:buildInfo => 1}, false, false)
     bson_response = @db.command({:bson => bson})
     assert_equal normal_response, bson_response
   end

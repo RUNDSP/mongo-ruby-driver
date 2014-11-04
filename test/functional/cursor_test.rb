@@ -91,14 +91,14 @@ class CursorTest < Test::Unit::TestCase
   end
 
   def test_compile_regex_get_more
-    return unless defined?(BSON::BSON_RUBY) && BSON::BSON_CODER == BSON::BSON_RUBY
+    return unless defined?(RUN_BSON::BSON_RUBY) && RUN_BSON::BSON_CODER == RUN_BSON::BSON_RUBY
     @coll.remove
     n_docs = 3
     n_docs.times { |n| @coll.insert({ 'n' => /.*/ }) }
     cursor = @coll.find({}, :batch_size => (n_docs-1), :compile_regex => false)
     cursor.expects(:send_get_more)
     cursor.to_a.each do |doc|
-      assert_kind_of BSON::Regex, doc['n']
+      assert_kind_of RUN_BSON::Regex, doc['n']
     end
   end
 
@@ -541,7 +541,7 @@ class CursorTest < Test::Unit::TestCase
     @coll.save(:i => 2)
     assert_equal 2, @coll.find.count
 
-    @coll.ensure_index(BSON::OrderedHash[:i, Mongo::ASCENDING])
+    @coll.ensure_index(RUN_BSON::OrderedHash[:i, Mongo::ASCENDING])
 
     # Check that a named_hint can be specified
     assert_equal 1, @coll.find({ :i => 1 }, :named_hint => '_id_').count
@@ -565,7 +565,7 @@ class CursorTest < Test::Unit::TestCase
       assert_equal 1, @coll.find({ :i => 1 }, :named_hint => 'bad_hint').count
     end
 
-    @coll.ensure_index(BSON::OrderedHash[:x, Mongo::ASCENDING], :sparse => true)
+    @coll.ensure_index(RUN_BSON::OrderedHash[:x, Mongo::ASCENDING], :sparse => true)
 
     # The sparse index won't have any entries.
     # Check that count returns 0 when using the hint.
@@ -667,7 +667,7 @@ class CursorTest < Test::Unit::TestCase
     instance    = cursor.next
 
     assert_instance_of(klass, instance)
-    assert_instance_of(BSON::ObjectId, instance.id)
+    assert_instance_of(RUN_BSON::ObjectId, instance.id)
     assert_equal(1, instance.a)
   end
 

@@ -18,7 +18,7 @@ require 'logger'
 class ClientTest < Test::Unit::TestCase
 
   include Mongo
-  include BSON
+  include RUN_BSON
 
   def setup
     @client = standard_connection
@@ -159,7 +159,7 @@ class ClientTest < Test::Unit::TestCase
     con = MongoClient.from_uri(TEST_URI)
     db = con.db
     coll = db.collection('from-uri-test')
-    assert_equal BSON::ObjectId, coll.insert({'a' => 1}).class
+    assert_equal RUN_BSON::ObjectId, coll.insert({'a' => 1}).class
     [con, db, coll].each do |component|
       component.write_concern.each do |key,value|
         assert_not_nil(value, "component #{component.class.inspect} should not have write concern #{key.inspect} field with nil value")

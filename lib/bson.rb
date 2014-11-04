@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module BSON
+module RUN_BSON
   DEFAULT_MAX_BSON_SIZE = 4 * 1024 * 1024
 
   def self.serialize(obj, check_keys=false, move_id=false)
@@ -31,12 +31,12 @@ module BSON
   #
   # @return [ByteBuffer]
   def self.read_bson_document(io)
-    bytebuf = BSON::ByteBuffer.new
+    bytebuf = RUN_BSON::ByteBuffer.new
     sz = io.read(4).unpack("V")[0]
     bytebuf.put_int(sz)
     bytebuf.put_array(io.read(sz-4).unpack("C*"))
     bytebuf.rewind
-    return BSON.deserialize(bytebuf)
+    return RUN_BSON.deserialize(bytebuf)
   end
 
   def self.extension?
@@ -50,24 +50,24 @@ begin
   # 1) JRuby and BSON_EXT_DISABLED is set.
   #     -OR-
   # 2) Ruby MRI and big endian or BSON_EXT_DISABLED is set.
-  raise LoadError unless BSON.extension?
+  raise LoadError unless RUN_BSON.extension?
 
   if RUBY_PLATFORM =~ /java/
     require 'bson/bson_java'
-    module BSON
+    module RUN_BSON
       BSON_CODER = BSON_JAVA
     end
   else
     require 'bson_ext/cbson'
     raise LoadError unless defined?(CBson::VERSION)
     require 'bson/bson_c'
-    module BSON
+    module RUN_BSON
       BSON_CODER = BSON_C
     end
   end
 rescue LoadError
   require 'bson/bson_ruby'
-  module BSON
+  module RUN_BSON
     BSON_CODER = BSON_RUBY
   end
 

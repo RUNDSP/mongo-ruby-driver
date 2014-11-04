@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module BSON
+module RUN_BSON
 
   # generates a wrapped Regexp with lazy compilation.
   # can represent flags not supported in Ruby's core Regexp class before compilation.
@@ -40,9 +40,9 @@ module BSON
 
     # Check equality of this wrapped Regexp with another.
     #
-    # @param [BSON::Regex] regexp
+    # @param [RUN_BSON::Regex] regexp
     def eql?(regexp)
-      regexp.kind_of?(BSON::Regex) &&
+      regexp.kind_of?(RUN_BSON::Regex) &&
         self.pattern == regexp.pattern &&
         self.options == regexp.options
     end
@@ -50,11 +50,11 @@ module BSON
 
     # Get a human-readable representation of this BSON Regex.
     def inspect
-      "#<BSON::Regex:0x#{self.object_id} " <<
+      "#<RUN_BSON::Regex:0x#{self.object_id} " <<
       "@pattern=#{@pattern}>, @options=#{@options}>"
     end
 
-    # Clone or dup the current BSON::Regex.
+    # Clone or dup the current RUN_BSON::Regex.
     def initialize_copy
       a_copy = self.dup
       a_copy.pattern = self.pattern.dup
@@ -62,16 +62,16 @@ module BSON
       a_copy
     end
 
-    # Attempt to convert a native Ruby Regexp to a BSON::Regex.
+    # Attempt to convert a native Ruby Regexp to a RUN_BSON::Regex.
     #
     # @note Warning: Ruby regular expressions use a different syntax and different
     #   set of flags than BSON regular expressions. A regular expression matches different
     #   strings when executed in Ruby than it matches when used in a MongoDB query,
     #   if it can be used in a query at all.
     #
-    # @param regexp [Regexp] The native Ruby regexp object to convert to BSON::Regex.
+    # @param regexp [Regexp] The native Ruby regexp object to convert to RUN_BSON::Regex.
     #
-    # @return [BSON::Regex]
+    # @return [RUN_BSON::Regex]
     def self.from_native(regexp)
       pattern = regexp.source
       opts = 0
@@ -82,7 +82,7 @@ module BSON
       self.new(pattern, opts)
     end
 
-    # Compile the BSON::Regex.
+    # Compile the RUN_BSON::Regex.
     #
     # @note Warning: regular expressions retrieved from the server may include a pattern
     #   that cannot be compiled into a Ruby regular expression, or which matches a

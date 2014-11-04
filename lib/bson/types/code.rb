@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module BSON
+module RUN_BSON
 
   # JavaScript code to be evaluated by MongoDB.
   class Code
@@ -30,7 +30,7 @@ module BSON
       @scope = scope
 
       unless @code.is_a?(String)
-        raise ArgumentError, "BSON::Code must be in the form of a String; #{@code.class} is not allowed."
+        raise ArgumentError, "RUN_BSON::Code must be in the form of a String; #{@code.class} is not allowed."
       end
     end
 
@@ -44,7 +44,7 @@ module BSON
     end
 
     def inspect
-      "<BSON::Code:#{object_id} @data=\"#{@code}\" @scope=\"#{@scope.inspect}\">"
+      "<RUN_BSON::Code:#{object_id} @data=\"#{@code}\" @scope=\"#{@scope.inspect}\">"
     end
 
     def to_bson_code

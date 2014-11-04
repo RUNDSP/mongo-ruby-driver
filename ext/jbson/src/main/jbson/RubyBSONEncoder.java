@@ -81,13 +81,13 @@ public class RubyBSONEncoder extends BasicBSONEncoder {
         _check_keys           = check_keys;
         _move_id              = move_id;
         _runtime              = runtime;
-        _rbclsByteBuffer      = runtime.getClassFromPath( "BSON::ByteBuffer" );
-        _rbclsInvalidDocument = runtime.getClassFromPath( "BSON::InvalidDocument" );
-        _rbclsInvalidKeyName  = runtime.getClassFromPath( "BSON::InvalidKeyName" );
+        _rbclsByteBuffer      = runtime.getClassFromPath( "RUN_BSON::ByteBuffer" );
+        _rbclsInvalidDocument = runtime.getClassFromPath( "RUN_BSON::InvalidDocument" );
+        _rbclsInvalidKeyName  = runtime.getClassFromPath( "RUN_BSON::InvalidKeyName" );
         _rbclsRangeError      = runtime.getClassFromPath( "RangeError" );
         _idAsSym              = runtime.newSymbol( "_id" );
         _tfAsString           = runtime.newString( "_transientFields" );
-        _rbclsBSONRegex       = runtime.getClassFromPath( "BSON::Regex" );
+        _rbclsBSONRegex       = runtime.getClassFromPath( "RUN_BSON::Regex" );
 
         _BSONRegexIgnorecase      = ((Long)JavaEmbedUtils.invokeMethod( _runtime, _rbclsBSONRegex,
                                     "const_get", new Object[] {
@@ -384,31 +384,31 @@ public class RubyBSONEncoder extends BasicBSONEncoder {
                 String klass = JavaEmbedUtils.invokeMethod(_runtime, val,
                         "class", new Object[] {}, Object.class).toString();
 
-                if( klass.equals( "BSON::ObjectId" ) ) {
+                if( klass.equals( "RUN_BSON::ObjectId" ) ) {
                     putRubyObjectId(name, (RubyObject)val );
                 }
-                else if( klass.equals( "BSON::Regex" ) ) {
+                else if( klass.equals( "RUN_BSON::Regex" ) ) {
                     putRubyBSONRegex(name, (RubyObject)val );
                 }
                 else if( klass.equals( "Java::JavaUtil::ArrayList" ) ) {
                     putIterable(name, (Iterable)val );
                 }
-                else if ( klass.equals( "BSON::Code" ) ) {
+                else if ( klass.equals( "RUN_BSON::Code" ) ) {
                     putRubyCodeWScope(name, (RubyObject)val );
                 }
-                else if ( klass.equals( "BSON::Binary" ) ) {
+                else if ( klass.equals( "RUN_BSON::Binary" ) ) {
                     putRubyBinary( name , (RubyObject)val );
                 }
-                else if ( klass.equals("BSON::MinKey") ) {
+                else if ( klass.equals("RUN_BSON::MinKey") ) {
                     _put( MINKEY, name );
                 }
-                else if ( klass.equals("BSON::MaxKey") ) {
+                else if ( klass.equals("RUN_BSON::MaxKey") ) {
                     _put( MAXKEY, name );
                 }
-                else if ( klass.equals("BSON::Timestamp") ) {
+                else if ( klass.equals("RUN_BSON::Timestamp") ) {
                     putRubyTimestamp( name, (RubyObject)val );
                 }
-                else if ( klass.equals("BSON::DBRef") ) {
+                else if ( klass.equals("RUN_BSON::DBRef") ) {
                     RubyHash ref = (RubyHash)JavaEmbedUtils.invokeMethod(_runtime, val,
                             "to_hash", new Object[] {}, Object.class);
                     putMap( name , (Map)ref );

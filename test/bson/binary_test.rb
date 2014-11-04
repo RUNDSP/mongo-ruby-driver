@@ -20,7 +20,7 @@ class BinaryTest < Test::Unit::TestCase
   end
 
   def test_do_not_display_binary_data
-    binary = BSON::Binary.new(@data)
-    assert_equal "<BSON::Binary:#{binary.object_id}>", binary.inspect
+    binary = RUN_BSON::Binary.new(@data)
+    assert_equal "<RUN_BSON::Binary:#{binary.object_id}>", binary.inspect
   end
 end

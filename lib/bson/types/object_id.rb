@@ -15,9 +15,9 @@
 require 'digest/md5'
 require 'socket'
 
-module BSON
+module RUN_BSON
 
-  def BSON::ObjectId(s)
+  def RUN_BSON::ObjectId(s)
     ObjectId.from_string(s)
   end
 
@@ -64,7 +64,7 @@ module BSON
     #   succeeding the timestamp will be zeroed; if true, they'll
     #   consist of the standard machine id, pid, and counter.
     #
-    # @return [BSON::ObjectId]
+    # @return [RUN_BSON::ObjectId]
     #
     # @example Return all document created before Jan 1, 2010.
     #   time = Time.utc(2010, 1, 1)
@@ -83,7 +83,7 @@ module BSON
     #
     # @param [Hash] doc a document requiring an _id.
     #
-    # @return [BSON::ObjectId, Object] returns a newly-created or
+    # @return [RUN_BSON::ObjectId, Object] returns a newly-created or
     #   current _id for the given document.
     def self.create_pk(doc)
       doc.has_key?(:_id) || doc.has_key?('_id') ? doc : doc.merge!(:_id => self.new)
@@ -91,9 +91,9 @@ module BSON
 
     # Check equality of this object id with another.
     #
-    # @param [BSON::ObjectId] object_id
+    # @param [RUN_BSON::ObjectId] object_id
     def eql?(object_id)
-      object_id.kind_of?(BSON::ObjectId) and self.data == object_id.data
+      object_id.kind_of?(RUN_BSON::ObjectId) and self.data == object_id.data
     end
     alias_method :==, :eql?
 
@@ -117,7 +117,7 @@ module BSON
     #
     # @param [String] str
     #
-    # @return [BSON::ObjectId]
+    # @return [RUN_BSON::ObjectId]
     def self.from_string(str)
       raise InvalidObjectId, "illegal ObjectId format: #{str}" unless legal?(str)
       data = []
@@ -135,7 +135,7 @@ module BSON
     end
 
     def inspect
-      "BSON::ObjectId('#{to_s}')"
+      "RUN_BSON::ObjectId('#{to_s}')"
     end
 
     # Convert to MongoDB extended JSON format. Since JSON includes type information,
@@ -169,7 +169,7 @@ module BSON
 
     private
 
-    if RUBY_PLATFORM =~ /java/ && BSON.extension?
+    if RUBY_PLATFORM =~ /java/ && RUN_BSON.extension?
       @@generator = Java::OrgBsonTypes::ObjectId
       @@machine_id = [@@generator.genMachineId].pack("N")[0,3]
 
@@ -190,7 +190,7 @@ module BSON
 
       # We need to check whether BSON_CODER is defined because it's required by
       # the BSON C extensions.
-      if defined?(BSON::BSON_CODER) && BSON::BSON_CODER == BSON::BSON_RUBY
+      if defined?(RUN_BSON::BSON_CODER) && RUN_BSON::BSON_CODER == RUN_BSON::BSON_RUBY
         # This gets overwritten by the C extension if it loads.
         def generate(oid_time=nil)
           oid = ''

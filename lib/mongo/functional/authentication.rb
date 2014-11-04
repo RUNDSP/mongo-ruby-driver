@@ -232,7 +232,7 @@ module Mongo
       nonce   = get_nonce(auth[:source], opts)
 
       # build auth command document
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd['authenticate'] = 1
       cmd['user'] = auth[:username]
       cmd['nonce'] = nonce
@@ -251,7 +251,7 @@ module Mongo
     def issue_x509(auth, opts={})
       db_name = '$external'
 
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:authenticate] = 1
       cmd[:mechanism]    = auth[:mechanism]
       cmd[:user]         = auth[:username]
@@ -273,10 +273,10 @@ module Mongo
       db_name = auth[:source]
       payload = "\x00#{auth[:username]}\x00#{auth[:password]}"
 
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:saslStart]     = 1
       cmd[:mechanism]     = auth[:mechanism]
-      cmd[:payload]       = BSON::Binary.new(payload)
+      cmd[:payload]       = RUN_BSON::Binary.new(payload)
       cmd[:autoAuthorize] = 1
 
       auth_command(cmd, opts[:socket], db_name).first
@@ -304,7 +304,7 @@ module Mongo
     #
     # @private
     def get_nonce(db_name, opts={})
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:getnonce] = 1
       doc = auth_command(cmd, opts[:socket], db_name).first
 

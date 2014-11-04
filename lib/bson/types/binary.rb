@@ -14,7 +14,7 @@
 
 require 'bson/byte_buffer'
 
-module BSON
+module RUN_BSON
 
   # An array of binary bytes with a MongoDB subtype. See the subtype
   # constants for reference.
@@ -45,7 +45,7 @@ module BSON
     end
 
     def inspect
-      "<BSON::Binary:#{object_id}>"
+      "<RUN_BSON::Binary:#{object_id}>"
     end
 
   end

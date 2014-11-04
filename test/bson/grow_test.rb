@@ -16,17 +16,17 @@
 
 require 'test_helper'
 
-module BSON
+module RUN_BSON
   class ByteBuffer
     def to_ruby
-      BSON::BSON_CODER.deserialize(self)
+      RUN_BSON::BSON_CODER.deserialize(self)
     end
   end
 end
 
 class Hash
   def to_bson
-    byte_buffer = BSON::BSON_CODER.serialize(self, false, true)
+    byte_buffer = RUN_BSON::BSON_CODER.serialize(self, false, true)
     byte_buffer.position = byte_buffer.size
     byte_buffer
   end
@@ -61,7 +61,7 @@ class BSONGrowTest < Test::Unit::TestCase
   end
 
   def test_finish_one_bang
-    message = BSON::ByteBuffer.new
+    message = RUN_BSON::ByteBuffer.new
     message.put_int(0)
     message.put_binary(@bson_a.to_e)
     message.finish_one!

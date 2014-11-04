@@ -82,7 +82,7 @@ module Mongo
     # performed during a number of relevant operations. See DB#collection, DB#create_collection and
     # DB#drop_collection.
     #
-    # @option opts [Object, #create_pk(doc)] :pk (BSON::ObjectId) A primary key factory object,
+    # @option opts [Object, #create_pk(doc)] :pk (RUN_BSON::ObjectId) A primary key factory object,
     #   which should take a hash and return a hash which merges the original hash with any primary key
     #   fields the factory wishes to inject. (NOTE: if the object already has a primary key,
     #   the factory should not inject a new key).
@@ -181,7 +181,7 @@ module Mongo
       self[SYSTEM_JS_COLLECTION].save(
         {
           "_id" => function_name,
-          :value => BSON::Code.new(code)
+          :value => RUN_BSON::Code.new(code)
         }
       )
     end
@@ -287,7 +287,7 @@ module Mongo
     # @return [Array] List of collection info.
     def collections_info(coll_name=nil)
       if @client.wire_version_feature?(Mongo::MongoClient::MONGODB_2_8)
-        cmd = BSON::OrderedHash[:listCollections, 1]
+        cmd = RUN_BSON::OrderedHash[:listCollections, 1]
         cmd.merge!(:filter => { :name => coll_name }) if coll_name
         self.command(cmd)['collections']
       else
@@ -324,7 +324,7 @@ module Mongo
       end
 
       begin
-        cmd = BSON::OrderedHash.new
+        cmd = RUN_BSON::OrderedHash.new
         cmd[:create] = name
         doc = command(cmd.merge(opts || {}))
         return Collection.new(name, self, :pk => @pk_factory) if ok?(doc)
@@ -380,7 +380,7 @@ module Mongo
     #
     # @raise [MongoDBError] if the operation fails.
     def get_last_error(opts={})
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:getlasterror] = 1
       cmd.merge!(opts)
       doc = command(cmd, :check_response => false)
@@ -436,11 +436,11 @@ module Mongo
     #
     # @return [String] the return value of the function.
     def eval(code, *args)
-      unless code.is_a?(BSON::Code)
-        code = BSON::Code.new(code)
+      unless code.is_a?(RUN_BSON::Code)
+        code = RUN_BSON::Code.new(code)
       end
 
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:$eval] = code
       cmd.merge!(args.pop) if args.last.respond_to?(:keys) && args.last.key?(:nolock)
       cmd[:args] = args
@@ -457,7 +457,7 @@ module Mongo
     #
     # @raise MongoDBError if there's an error renaming the collection.
     def rename_collection(from, to)
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:renameCollection] = "#{@name}.#{from}"
       cmd[:to] = "#{@name}.#{to}"
       doc = DB.new('admin', @client).command(cmd, :check_response => false)
@@ -474,7 +474,7 @@ module Mongo
     #
     # @raise MongoDBError if there's an error dropping the index.
     def drop_index(collection_name, index_name)
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:deleteIndexes] = collection_name
       cmd[:index] = index_name.to_s
       doc = command(cmd, :check_response => false)
@@ -535,7 +535,7 @@ module Mongo
     #   more details.
     # @option opts [String]  :comment (nil) a comment to include in profiling logs
     # @option opts [Boolean] :compile_regex (true) whether BSON regex objects should be compiled into Ruby regexes.
-    #   If false, a BSON::Regex object will be returned instead.
+    #   If false, a RUN_BSON::Regex object will be returned instead.
     #
     # @return [Hash]
     def command(selector, opts={})
@@ -552,14 +552,14 @@ module Mongo
       command[:limit] = -1
       command[:read] = Mongo::ReadPreference::cmd_read_pref(opts.delete(:read), selector) if opts.key?(:read)
 
-      if RUBY_VERSION < '1.9' && selector.class != BSON::OrderedHash
+      if RUBY_VERSION < '1.9' && selector.class != RUN_BSON::OrderedHash
         if selector.keys.length > 1
           raise MongoArgumentError, "DB#command requires an OrderedHash when hash contains multiple keys"
         end
         if opts.keys.size > 0
           # extra opts will be merged into the selector, so make sure it's an OH in versions < 1.9
           selector = selector.dup
-          selector = BSON::OrderedHash.new.merge!(selector)
+          selector = RUN_BSON::OrderedHash.new.merge!(selector)
         end
       end
 
@@ -624,7 +624,7 @@ module Mongo
     #
     # @return [Symbol] :off, :slow_only, or :all
     def profiling_level
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:profile] = -1
       doc = command(cmd, :check_response => false)
 
@@ -640,7 +640,7 @@ module Mongo
     #
     # @param [Symbol] level acceptable options are +:off+, +:slow_only+, or +:all+.
     def profiling_level=(level)
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:profile] = PROFILE_LEVEL[level]
       doc = command(cmd, :check_response => false)
       ok?(doc) || raise(MongoDBError, "Error with profile command: #{doc.inspect}")
@@ -662,7 +662,7 @@ module Mongo
     # @raise [MongoDBError] if the command fails or there's a problem with the validation
     #   data, or if the collection is invalid.
     def validate_collection(name)
-      cmd = BSON::OrderedHash.new
+      cmd = RUN_BSON::OrderedHash.new
       cmd[:validate] = name
       cmd[:full] = true
       doc = command(cmd, :check_response => false)
