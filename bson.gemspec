@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   end
 
   s.files             = ['bson.gemspec', 'LICENSE', 'VERSION']
-  s.files             += ['bin/b2json', 'bin/j2bson', 'lib/bson.rb']
+  s.files             += ['bin/b2json', 'bin/j2bson', 'lib/run_bson.rb']
   s.files             += Dir['lib/bson/**/*.rb']
 
   if RUBY_PLATFORM =~ /java/
