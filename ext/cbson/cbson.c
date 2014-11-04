@@ -1140,7 +1140,7 @@ void Init_cbson() {
     lt_operator = rb_intern("<");
     gt_operator = rb_intern(">");
 
-    bson = rb_const_get(rb_cObject, rb_intern("BSON"));
+    bson = rb_const_get(rb_cObject, rb_intern("RUN_BSON"));
     rb_require("bson/types/binary");
     Binary = rb_const_get(bson, rb_intern("Binary"));
     rb_require("bson/types/object_id");
