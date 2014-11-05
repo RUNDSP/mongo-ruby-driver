@@ -16,11 +16,11 @@ module RUN_BSON
   DEFAULT_MAX_BSON_SIZE = 4 * 1024 * 1024
 
   def self.serialize(obj, check_keys=false, move_id=false)
-    BSON_CODER.serialize(obj, check_keys, move_id)
+    RUN_BSON::BSON_CODER.serialize(obj, check_keys, move_id)
   end
 
   def self.deserialize(buf=nil, opts={})
-    BSON_CODER.deserialize(buf, opts)
+    RUN_BSON::BSON_CODER.deserialize(buf, opts)
   end
 
   # Reads a single BSON document from an IO object.
