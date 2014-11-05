@@ -23,7 +23,7 @@ require 'test_helper'
 # that way. It must be required by the application code or
 # via bundler for developmet.
 
-require 'bson/support/hash_with_indifferent_access'
+require 'run_bson/support/hash_with_indifferent_access'
 
 class HashWithIndifferentAccessTest < Test::Unit::TestCase
   include RUN_BSON

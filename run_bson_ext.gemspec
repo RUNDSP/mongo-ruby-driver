@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.files             = ['run_bson_ext.gemspec', 'LICENSE', 'VERSION']
   s.files             += Dir['ext/**/*.rb'] + Dir['ext/**/*.c'] + Dir['ext/**/*.h']
 
-  s.require_paths     = ['ext/bson_ext']
+  s.require_paths     = ['ext/run_bson_ext']
   s.extensions        = ['ext/cbson/extconf.rb']
   s.has_rdoc          = 'yard'
 

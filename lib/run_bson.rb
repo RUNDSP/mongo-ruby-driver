@@ -53,20 +53,20 @@ begin
   raise LoadError unless RUN_BSON.extension?
 
   if RUBY_PLATFORM =~ /java/
-    require 'bson/bson_java'
+    require 'run_bson/bson_java'
     module RUN_BSON
       BSON_CODER = BSON_JAVA
     end
   else
-    require 'bson_ext/cbson'
+    require 'run_bson_ext/cbson'
     raise LoadError unless defined?(CBson::VERSION)
-    require 'bson/bson_c'
+    require 'run_bson/bson_c'
     module RUN_BSON
       BSON_CODER = BSON_C
     end
   end
 rescue LoadError
-  require 'bson/bson_ruby'
+  require 'run_bson/bson_ruby'
   module RUN_BSON
     BSON_CODER = BSON_RUBY
   end
@@ -100,14 +100,14 @@ rescue LoadError
 end
 
 require 'base64'
-require 'bson/bson_ruby'
-require 'bson/byte_buffer'
-require 'bson/exceptions'
-require 'bson/ordered_hash'
-require 'bson/types/binary'
-require 'bson/types/code'
-require 'bson/types/dbref'
-require 'bson/types/min_max_keys'
-require 'bson/types/regex'
-require 'bson/types/object_id'
-require 'bson/types/timestamp'
+require 'run_bson/bson_ruby'
+require 'run_bson/byte_buffer'
+require 'run_bson/exceptions'
+require 'run_bson/ordered_hash'
+require 'run_bson/types/binary'
+require 'run_bson/types/code'
+require 'run_bson/types/dbref'
+require 'run_bson/types/min_max_keys'
+require 'run_bson/types/regex'
+require 'run_bson/types/object_id'
+require 'run_bson/types/timestamp'

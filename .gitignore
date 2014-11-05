@@ -21,7 +21,7 @@ ext/cbson/Makefile
 ext/jbson/target/java
 Gemfile.lock
 gem-private_key.pem
-lib/bson_ext
+lib/run_bson_ext
 lib/mongo_ext/Makefile
 nbproject
 tmp

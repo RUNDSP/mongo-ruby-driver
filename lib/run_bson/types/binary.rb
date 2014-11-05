@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'bson/byte_buffer'
+require 'run_bson/byte_buffer'
 
 module RUN_BSON
 

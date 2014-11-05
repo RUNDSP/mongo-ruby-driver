@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'bson/grow'
+require 'run_bson/grow'
 
 module RUN_BSON
   class ByteBuffer

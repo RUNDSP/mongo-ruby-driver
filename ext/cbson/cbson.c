@@ -445,10 +445,10 @@ static int write_element(VALUE key, VALUE value, VALUE extra, int allow_id) {
             // TODO there has to be a better way to do these checks...
             const char* cls = rb_obj_classname(value);
             if (strcmp(cls, "RUN_BSON::Binary") == 0 ||
-                strcmp(cls, "ByteBuffer") == 0) {
+                strcmp(cls, "RUN_BSON::ByteBuffer") == 0) {
                 VALUE string_data = rb_funcall(value, rb_intern("to_s"), 0);
                 int length = RSTRING_LENINT(string_data);
-                const char subtype = strcmp(cls, "ByteBuffer") ?
+                const char subtype = strcmp(cls, "RUN_BSON::ByteBuffer") ?
                     (const char)FIX2INT(rb_funcall(value, rb_intern("subtype"), 0)) : 2;
                 write_name_and_type(buffer, key, 0x05);
                 if (subtype == 2) {
@@ -1141,20 +1141,20 @@ void Init_cbson() {
     gt_operator = rb_intern(">");
 
     bson = rb_const_get(rb_cObject, rb_intern("RUN_BSON"));
-    rb_require("bson/types/binary");
+    rb_require("run_bson/types/binary");
     Binary = rb_const_get(bson, rb_intern("Binary"));
-    rb_require("bson/types/object_id");
+    rb_require("run_bson/types/object_id");
     ObjectId = rb_const_get(bson, rb_intern("ObjectId"));
-    rb_require("bson/types/dbref");
+    rb_require("run_bson/types/dbref");
     DBRef = rb_const_get(bson, rb_intern("DBRef"));
-    rb_require("bson/types/code");
+    rb_require("run_bson/types/code");
     Code = rb_const_get(bson, rb_intern("Code"));
-    rb_require("bson/types/min_max_keys");
+    rb_require("run_bson/types/min_max_keys");
     MinKey = rb_const_get(bson, rb_intern("MinKey"));
     MaxKey = rb_const_get(bson, rb_intern("MaxKey"));
-    rb_require("bson/types/timestamp");
+    rb_require("run_bson/types/timestamp");
     Timestamp = rb_const_get(bson, rb_intern("Timestamp"));
-    rb_require("bson/types/regex");
+    rb_require("run_bson/types/regex");
     BSONRegex = rb_const_get(bson, rb_intern("Regex"));
     BSONRegex_IGNORECASE = rb_const_get(BSONRegex, rb_intern("IGNORECASE"));
     BSONRegex_EXTENDED = rb_const_get(BSONRegex, rb_intern("EXTENDED"));
@@ -1163,12 +1163,12 @@ void Init_cbson() {
     BSONRegex_LOCALE_DEPENDENT = rb_const_get(BSONRegex, rb_intern("LOCALE_DEPENDENT"));
     BSONRegex_UNICODE = rb_const_get(BSONRegex, rb_intern("UNICODE"));
     Regexp = rb_const_get(rb_cObject, rb_intern("Regexp"));
-    rb_require("bson/exceptions");
+    rb_require("run_bson/exceptions");
     InvalidKeyName = rb_const_get(bson, rb_intern("InvalidKeyName"));
     InvalidStringEncoding = rb_const_get(bson, rb_intern("InvalidStringEncoding"));
     InvalidDocument = rb_const_get(bson, rb_intern("InvalidDocument"));
     InvalidObjectId = rb_const_get(bson, rb_intern("InvalidObjectId"));
-    rb_require("bson/ordered_hash");
+    rb_require("run_bson/ordered_hash");
     OrderedHash = rb_const_get(bson, rb_intern("OrderedHash"));
     RB_HASH = rb_const_get(bson, rb_intern("Hash"));
 

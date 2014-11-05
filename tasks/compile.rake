@@ -28,7 +28,7 @@ if RUBY_PLATFORM =~ /java/
   end
 else
   Rake::ExtensionTask.new('cbson') do |ext|
-    ext.lib_dir = "lib/bson_ext"
+    ext.lib_dir = "lib/run_bson_ext"
     Rake::Task['clean'].invoke
   end
   Rake::ExtensionTask.new('csasl') do |ext|
