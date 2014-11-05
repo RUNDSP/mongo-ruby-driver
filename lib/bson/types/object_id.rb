@@ -18,7 +18,7 @@ require 'socket'
 module RUN_BSON
 
   def RUN_BSON::ObjectId(s)
-    ObjectId.from_string(s)
+    RUN_BSON::ObjectId.from_string(s)
   end
 
   # Generates MongoDB object ids.

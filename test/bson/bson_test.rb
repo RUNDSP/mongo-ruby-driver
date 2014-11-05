@@ -617,7 +617,7 @@ class BSONTest < Test::Unit::TestCase
   end
 
   def test_timestamp_type
-    ts = Timestamp.new(5000, 100)
+    ts = RUN_BSON::Timestamp.new(5000, 100)
     doc = {:ts => ts}
     bson = @encoder.serialize(doc)
     assert_equal ts, @encoder.deserialize(bson)["ts"]

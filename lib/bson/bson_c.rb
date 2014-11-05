@@ -17,11 +17,11 @@ module RUN_BSON
   class BSON_C
 
     def self.serialize(obj, check_keys=false, move_id=false, max_bson_size=DEFAULT_MAX_BSON_SIZE)
-      ByteBuffer.new(CBson.serialize(obj, check_keys, move_id, max_bson_size))
+      RUN_BSON::ByteBuffer.new(CBson.serialize(obj, check_keys, move_id, max_bson_size))
     end
 
     def self.deserialize(buf=nil, opts={})
-      CBson.deserialize(ByteBuffer.new(buf).to_s, opts)
+      CBson.deserialize(RUN_BSON::ByteBuffer.new(buf).to_s, opts)
     end
 
     def self.max_bson_size

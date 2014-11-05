@@ -47,7 +47,7 @@ module RUN_BSON
     INT64_MAX =  2**64 / 2 - 1
 
     def initialize(max_bson_size=DEFAULT_MAX_BSON_SIZE)
-      @buf = ByteBuffer.new('', max_bson_size)
+      @buf = RUN_BSON::ByteBuffer.new('', max_bson_size)
       @encoder = BSON_RUBY
     end
 
@@ -203,9 +203,9 @@ module RUN_BSON
       # If buf is nil, use @buf, assumed to contain already-serialized BSON.
       # This is only true during testing.
       if buf.is_a? String
-        @buf = ByteBuffer.new(buf.unpack("C*")) if buf
+        @buf = RUN_BSON::ByteBuffer.new(buf.unpack("C*")) if buf
       else
-        @buf = ByteBuffer.new(buf.to_a) if buf
+        @buf = RUN_BSON::ByteBuffer.new(buf.to_a) if buf
       end
       @buf.rewind
       @buf.get_int                # eat message size
@@ -266,10 +266,10 @@ module RUN_BSON
           doc[key] = deserialize_timestamp_data(@buf)
         when MAXKEY
           key = deserialize_cstr(@buf)
-          doc[key] = MaxKey.new
+          doc[key] = RUN_BSON::MaxKey.new
         when MINKEY, 255 # This is currently easier than unpack the type byte as an unsigned char.
           key = deserialize_cstr(@buf)
-          doc[key] = MinKey.new
+          doc[key] = RUN_BSON::MinKey.new
         when EOO
           break
         else
@@ -321,7 +321,7 @@ module RUN_BSON
       buf.position -= 4
       object = @encoder.new.deserialize(buf.get(size), opts)
       if object.has_key? "$ref"
-        DBRef.new(object["$ref"], object["$id"])
+        RUN_BSON::DBRef.new(object["$ref"], object["$id"])
       else
         object
       end
@@ -346,7 +346,7 @@ module RUN_BSON
     def deserialize_timestamp_data(buf)
       increment = buf.get_int
       seconds = buf.get_int
-      Timestamp.new(seconds, increment)
+      RUN_BSON::Timestamp.new(seconds, increment)
     end
 
     def encoded_str(str)
@@ -381,24 +381,24 @@ module RUN_BSON
       buf.position -= 4
       scope = @encoder.new.deserialize(buf.get(scope_size), opts)
 
-      Code.new(encoded_str(code), scope)
+      RUN_BSON::Code.new(encoded_str(code), scope)
     end
 
     def deserialize_oid_data(buf)
-      ObjectId.new(buf.get(12))
+      RUN_BSON::ObjectId.new(buf.get(12))
     end
 
     def deserialize_dbref_data(buf)
       ns = deserialize_string_data(buf)
       oid = deserialize_oid_data(buf)
-      DBRef.new(ns, oid)
+      RUN_BSON::DBRef.new(ns, oid)
     end
 
     def deserialize_binary_data(buf)
       len = buf.get_int
       type = buf.get
       len = buf.get_int if type == Binary::SUBTYPE_BYTES
-      Binary.new(buf.get(len), type)
+      RUN_BSON::Binary.new(buf.get(len), type)
     end
 
     def serialize_eoo_element(buf)
@@ -423,8 +423,8 @@ module RUN_BSON
 
       bytes = val.to_a
       num_bytes = bytes.length
-      subtype = val.respond_to?(:subtype) ? val.subtype : Binary::SUBTYPE_BYTES
-      if subtype == Binary::SUBTYPE_BYTES
+      subtype = val.respond_to?(:subtype) ? val.subtype : RUN_BSON::Binary::SUBTYPE_BYTES
+      if subtype == RUN_BSON::Binary::SUBTYPE_BYTES
         buf.put_int(num_bytes + 4)
         buf.put(subtype)
         buf.put_int(num_bytes)
@@ -596,9 +596,9 @@ module RUN_BSON
         NUMBER_INT
       when Float
         NUMBER
-      when ByteBuffer
+      when RUN_BSON::ByteBuffer
         BINARY
-      when Code
+      when RUN_BSON::Code
         CODE_W_SCOPE
       when String
         STRING
@@ -606,9 +606,9 @@ module RUN_BSON
         ARRAY
       when Regexp, RUN_BSON::Regex
         REGEX
-      when ObjectId
+      when RUN_BSON::ObjectId
         OID
-      when DBRef
+      when RUN_BSON::DBRef
         REF
       when true, false
         BOOLEAN
@@ -618,11 +618,11 @@ module RUN_BSON
         OBJECT
       when Symbol
         SYMBOL
-      when MaxKey
+      when RUN_BSON::MaxKey
         MAXKEY
-      when MinKey
+      when RUN_BSON::MinKey
         MINKEY
-      when Timestamp
+      when RUN_BSON::Timestamp
         TIMESTAMP
       when Numeric
         raise InvalidDocument, "Cannot serialize the Numeric type #{o.class} as BSON; only Fixum, Bignum, and Float are supported."

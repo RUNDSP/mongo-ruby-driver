@@ -20,7 +20,7 @@ module RUN_BSON
   # constants for reference.
   #
   # Use this class when storing binary data in documents.
-  class Binary < ByteBuffer
+  class Binary < RUN_BSON::ByteBuffer
 
     SUBTYPE_SIMPLE       = 0x00
     SUBTYPE_BYTES        = 0x02
